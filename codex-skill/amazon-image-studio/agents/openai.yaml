@@ -1,0 +1,4 @@
+interface:
+  display_name: "Amazon 图片工作台"
+  short_description: "策划 Amazon Listing 与 A+ 图片"
+  default_prompt: "$amazon-image-studio：请按“一个窗口一个 SKU”的方式制作 Amazon Listing 或 A+ 图片，默认使用简约信息密度，并在 Prompt 方案旁显示可选的风格模板图。"

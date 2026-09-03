@@ -1,0 +1,12 @@
+{
+  "name": "amazon-image-studio-codex",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Standalone Codex Skill for Amazon Listing and A+ image workflows.",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "codex:install": "node scripts/install-codex-skill.mjs",
+    "test": "node --test"
+  }
+}
