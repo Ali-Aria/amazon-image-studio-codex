@@ -4,7 +4,7 @@
 
 它根据商品标题、五点描述、产品资料和参考图，为 Amazon Listing 与 A+ 页面生成结构化图片方案、合规检查清单和专业图片 Prompt；在宿主环境支持图片生成时，也可以继续生成图片文件。
 
-这是一个独立项目，面向本地 Codex 聊天窗使用，不依赖原来的 `amazon-image-studio` React 工作台。
+这是一个独立项目，面向本地 Codex 聊天窗使用，不依赖原来的 [amazon-image-studio](https://github.com/Ali-Aria/amazon-image-studio) React 工作台。
 
 ## 安装
 
