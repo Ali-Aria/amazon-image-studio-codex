@@ -128,6 +128,16 @@ output/
 
 详细运行契约见 [`SKILL.md`](skills/amazon-image-studio/SKILL.md)，首次使用模板见[快速开始](skills/amazon-image-studio/references/quick-start.md)。
 
+## 模板图无法显示
+
+模板图安装后位于当前用户的 Codex Skill 目录，例如 Windows：
+
+```text
+C:/Users/<username>/.codex/skills/amazon-image-studio/assets/style-presets/clean-tech.png
+```
+
+注意 `username` 和 `.codex` 之间必须有路径分隔符。不要只复制 `SKILL.md`，需要通过 `npm run codex:install` 安装整个 `skills/amazon-image-studio` 文件夹，然后重新打开 Codex。聊天中显示一个 `clean-tech.png` 文件卡片也不等于已经显示图片预览；需要由 Codex 附加实际图片内容或使用可渲染的本地图片路径。
+
 ## 开发命令
 
 | 命令 | 用途 |
