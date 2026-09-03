@@ -14,7 +14,7 @@
 npm run codex:install
 ```
 
-安装脚本会把 `codex-skill/amazon-image-studio` 复制到当前用户的 Codex Skill 目录：
+安装脚本会把 `skills/amazon-image-studio` 复制到当前用户的 Codex Skill 目录：
 
 ```text
 Windows: %USERPROFILE%\\.codex\\skills\\amazon-image-studio\\
@@ -33,7 +33,7 @@ macOS/Linux: ~/.codex/skills/amazon-image-studio/
 $amazon-image-studio
 ```
 
-一个窗口只处理一个 SKU。需要同时制作多个商品时，新建多个独立 Codex 任务，在每个任务的底部消息输入框粘贴任务模板，分别替换 SKU、商品资料并上传对应参考图。详细模板和“复制工作目录 / 复制深度链接 / 复制为 Markdown”的区别见 [快速开始](codex-skill/amazon-image-studio/references/quick-start.md)。
+一个窗口只处理一个 SKU。需要同时制作多个商品时，新建多个独立 Codex 任务，在每个任务的底部消息输入框粘贴任务模板，分别替换 SKU、商品资料并上传对应参考图。详细模板和“复制工作目录 / 复制深度链接 / 复制为 Markdown”的区别见 [快速开始](skills/amazon-image-studio/references/quick-start.md)。
 
 生成图片 Prompt 方案时，Skill 会同步展示已安装的风格模板图。用户可以回复模板 ID 或名称来选择模板；确认后，模板图会作为 Listing 附图和 A+ 图片的风格参考，`MAIN` 主图不使用模板图并继续遵守纯白背景规则。
 
@@ -65,7 +65,7 @@ Skill 会把商品资料视为事实来源，不虚构尺寸、材质、认证�
 
 内置风格与项目版 ID 对齐：`clean-tech`、`natural-warm`、`premium-contrast`、`bright-retail`，以及适合幼儿女孩产品的 `soft-pink-toddler-girl`。
 
-五套风格现在都带有对应的图片风格板，统一存放在 `codex-skill/amazon-image-studio/assets/style-presets/`。可在聊天中直接指定风格，也可以使用默认 `clean-tech`。支持 `minimal`（简约，默认）和 `rich`（内容丰富）两种图片信息密度，也可以在聊天中直接说“简约”或“内容丰富”。
+五套风格现在都带有对应的图片风格板，统一存放在 `skills/amazon-image-studio/assets/style-presets/`。可在聊天中直接指定风格，也可以使用默认 `clean-tech`。支持 `minimal`（简约，默认）和 `rich`（内容丰富）两种图片信息密度，也可以在聊天中直接说“简约”或“内容丰富”。
 
 在当前项目中保存生成图片时，建议按 Listing 商品标题归档：
 
@@ -126,7 +126,7 @@ output/
 - Listing 附图和 A+ 模块保持同一套视觉风格。
 - 生成图片前先确认方案；没有实际图片产物时，不声称图片已经生成。
 
-详细运行契约见 [`SKILL.md`](codex-skill/amazon-image-studio/SKILL.md)，首次使用模板见[快速开始](codex-skill/amazon-image-studio/references/quick-start.md)。
+详细运行契约见 [`SKILL.md`](skills/amazon-image-studio/SKILL.md)，首次使用模板见[快速开始](skills/amazon-image-studio/references/quick-start.md)。
 
 ## 开发命令
 
@@ -139,7 +139,7 @@ output/
 
 ```text
 amazon-image-studio-codex/
-├── codex-skill/amazon-image-studio/
+├── skills/amazon-image-studio/
 │   ├── SKILL.md
 │   ├── agents/openai.yaml
 │   ├── assets/style-presets/      # 项目版 5 张风格参考板

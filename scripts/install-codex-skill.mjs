@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { cp, mkdir, readFile, rm, stat } from 'node:fs/promises'
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const source = path.join(projectRoot, 'codex-skill', 'amazon-image-studio')
+const source = path.join(projectRoot, 'skills', 'amazon-image-studio')
 const codexHome = process.env.CODEX_HOME || path.join(os.homedir(), '.codex')
 const target = path.join(codexHome, 'skills', 'amazon-image-studio')
 
