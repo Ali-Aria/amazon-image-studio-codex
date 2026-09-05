@@ -6,12 +6,16 @@ Use the project planner contract in [planner-prompts.md](planner-prompts.md). Se
 
 | Content type | Module sequence and generation size |
 |---|---|
-| `standard` | `A+S01` header-banner 970x300; `A+S02`–`A+S04` single-image 970x600; `A+S05`–`A+S08` highlight-tile 220x220 |
-| `standard-large` | `A+L01` header-banner 970x300; `A+L02`–`A+L05` single-image 970x600 |
+| `standard` | `A+S01` wide-hero 970x600; `A+S02`–`A+S04` single-image 970x600; `A+S05`–`A+S08` highlight-tile 220x220 |
+| `standard-large` | `A+L01` wide-hero 970x600; `A+L02`–`A+L05` single-image 970x600 |
 | `premium` | `A+P01` hero-banner 1464x600; `A+P02`–`A+P04` feature-image 970x600; `A+P05`–`A+P06` brand-story 463x625 |
 | `mobile` | `A+M01`–`A+M05` mobile modules 600x450; compose each independently for a narrow screen |
 
 Use the requested content type when provided. If the user gives only “A+”, default to `standard-large` for a concise image set and record the assumption.
+
+For `standard` and `standard-large`, plan and generate the first module at 970x600. Do not request a 970x300 generation and do not rely on the image model to produce an ultra-wide 970:300 canvas. If a downstream Amazon module needs a shorter banner crop, preserve the main subject and essential copy inside a centered 970x300-safe region so the 970x600 source can be cropped deliberately after generation.
+
+Before creating the A+ plan, show the proposed content type, total module count, and the exact target size of each module or size group in one confirmation message, then wait for explicit approval. Explain that these are planning/delivery targets and that native generated dimensions or aspect ratio may differ because they depend on OpenAI's currently available image-generation capabilities. For an unspecified A+ request, propose `standard-large`: 5 modules, all 970x600. Do not produce module strategy or prompts until the type, count, and target sizes are confirmed.
 
 ## Required output per module
 

@@ -4,7 +4,9 @@ Use the project planner contract in [planner-prompts.md](planner-prompts.md). Pr
 
 ## Default slots and image purposes
 
-When the user does not specify a count, create exactly 7 slots:
+Before creating the plan, show the proposed total count and exact target size in one confirmation message and wait for explicit approval. Explain that the size is a planning/delivery target and that native generated dimensions or aspect ratio may differ because they depend on OpenAI's currently available image-generation capabilities. When the user does not specify them, propose exactly 7 total slots at 2048x2048 each. Make clear that this total includes `MAIN`; if the request is for supporting images only, label the proposed count as excluding `MAIN`. Do not produce slot strategy or prompts until the count and target size are confirmed.
+
+After confirmation, use these default slots when the approved total is 7:
 
 | Slot | Project kind | Purpose |
 |---|---|---|

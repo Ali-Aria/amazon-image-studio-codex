@@ -38,6 +38,8 @@ Because the planner cannot receive or understand reference images in this reques
 
 ## Listing planning prompt
 
+The chat layer must obtain explicit user confirmation of the proposed total image count and exact target image dimensions before invoking the planner. The confirmation must disclose that these dimensions are planning/delivery targets, while native output dimensions and aspect ratio depend on OpenAI's currently available image-generation capabilities and cannot be guaranteed. Until confirmation, return only the concise preflight proposal; do not produce slot strategy, JSON plans, or image prompts. For an unspecified Listing request, propose 7 total images (`MAIN` plus 6 supporting images), all 2048x2048. Clearly distinguish total Listing count from supporting-image-only count.
+
 Unless the user requests another count, create exactly seven slots in this order:
 
 ```text
@@ -59,16 +61,20 @@ Every Listing plan must contain `slot`, `label`, `kind`, `planMarkdown`, `prompt
 
 ## A+ planning prompt
 
+The chat layer must obtain explicit user confirmation of the A+ content type, total module count, and exact target dimensions before invoking the planner. The confirmation must disclose that these dimensions are planning/delivery targets, while native output dimensions and aspect ratio depend on OpenAI's currently available image-generation capabilities and cannot be guaranteed. Until confirmation, return only the concise preflight proposal; do not produce module strategy, JSON plans, or image prompts. For an unspecified A+ request, propose `standard-large`: 5 modules, all 970x600.
+
 Support these content types and use their exact module families and upload sizes:
 
 | Content type | Module sequence and upload size |
 |---|---|
-| `standard` | `A+S01` Header Banner 970x300; `A+S02`–`A+S04` Single Image 970x600; `A+S05`–`A+S08` Highlight Tile 220x220 |
-| `standard-large` | `A+L01` Header Banner 970x300; `A+L02`–`A+L05` Single Image 970x600 |
+| `standard` | `A+S01` Wide Hero 970x600; `A+S02`–`A+S04` Single Image 970x600; `A+S05`–`A+S08` Highlight Tile 220x220 |
+| `standard-large` | `A+L01` Wide Hero 970x600; `A+L02`–`A+L05` Single Image 970x600 |
 | `premium` | `A+P01` Hero Banner 1464x600; `A+P02`–`A+P04` Feature Image 970x600; `A+P05`–`A+P06` Brand Story 463x625 |
 | `mobile` | `A+M01`–`A+M05` Mobile Hero/Feature 600x450 |
 
 Return exactly the requested module sequence and include `moduleType`, `uploadSize`, `generationSize`, `planMarkdown`, `textTitle`, `textBody`, `prompt`, `negativePrompt`, `stylePresetId`, `styleOverrides`, `fileName`, and `relativePath`.
+
+For `standard` and `standard-large`, set both `uploadSize` and `generationSize` of the first module to 970x600. Do not ask the image runtime to generate 970x300. Keep the main subject and essential copy inside a centered 970x300-safe region when later banner cropping may be required.
 
 For Mobile A+, use one clear message per module, large product evidence, short mobile-readable copy, and no dense multi-column composition. A+ should add product/brand value rather than simply duplicating the Listing gallery.
 
@@ -90,7 +96,7 @@ Return one English seriesStyleGuide for cross-image product consistency and fact
 Do not generate images. Return JSON only when a structured planner response is requested.
 ```
 
-For chat-style structured output, use these project field requirements before adding optional local output fields:
+For the internal structured planner result, use these project field requirements before adding optional local output fields. This JSON is intermediate machine-readable data: the outer chat response must save it as the plan artifact and must not mirror the complete object into a normal chat message.
 
 ```text
 Return JSON with: product { title, category, brand, color, material, audience, packageIncludes }, sellingPoints string[], seriesStyleGuide string, and imagePlans or aPlusPlans.
@@ -116,6 +122,9 @@ The selected visual style outranks conflicting aesthetic language in the slot pr
 
 ## Local Codex generation protocol
 
+- Use the Codex host's built-in `image_gen` or `image_generation` tool as the first-choice runtime whenever either tool is available. Pass the prepared prompt and required reference images directly to that built-in tool.
+- Do not bypass an available built-in tool by invoking an image API through shell commands, SDKs, HTTP requests, CLI utilities, or user-provided API keys.
+- If neither built-in tool is available, return `image_generation_unavailable` and keep the completed plan usable. Do not automatically switch to an external image API; use another runtime only when the user explicitly requests or authorizes it.
 - Generate one image per distinct slot; never create a collage.
 - For a multi-image set that needs continuity, generate `MAIN` or another primary base image first. Use that generated image as a reference for later dependent images.
 - Only batch independent remaining images after the base reference exists. Each batch prompt must be self-contained and include the full visual style block.

@@ -1,6 +1,8 @@
 # Codex result schema
 
-Return a JSON object with this compatible shape. `plans` and `prompts` remain as compact compatibility aliases when useful; `imagePlans` and `aPlusPlans` mirror the explicit planner names.
+Use this compatible shape for the machine-readable JSON plan artifact. `plans` and `prompts` remain as compact compatibility aliases when useful; `imagePlans` and `aPlusPlans` mirror the explicit planner names.
+
+In normal chat, do not print this complete object or a large JSON code block. Show a concise Chinese summary and planning table, save the complete object as `<sku-or-product-slug>__listing-plan.json` or `<sku-or-product-slug>__aplus-plan.json` inside the task output directory, and provide a clickable link when useful. If the filename exists, append `__v2`, `__v3`, and so on. A request for “JSON only” means deliver the JSON file unless the user explicitly asks to paste the complete JSON into the chat window.
 
 ```json
 {
@@ -46,5 +48,7 @@ Listing plan items use `slot`, `label`, `kind`, `planMarkdown`, `prompt`, and `n
 Each warning has `code` and `message`. Use `product_title_inferred` when the title was recovered from unlabeled Listing text, `product_title_missing` when no title could be recovered, and `image_generation_unavailable` when the runtime cannot return an image artifact. Keep `artifacts` empty when no file was actually produced.
 
 When a local file is produced, include its `outputPath`, for example `output/product-slug/listing/product-slug__MAIN.png`. Repeated output uses `__v2`, `__v3`, and so on rather than overwriting an existing file.
+
+The JSON plan file itself is an artifact. Include its path in the chat handoff, but do not duplicate the complete file contents in the same response.
 
 `styleTemplate.density` records the resolved image-information density. Use `minimal` by default; use `rich` only when the user explicitly requests content-rich or denser image information.
