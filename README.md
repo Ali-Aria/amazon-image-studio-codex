@@ -29,15 +29,21 @@ npm run codex:install
 
 ## 2. 开始使用
 
-在 Codex 新建任务，上传少量产品参考图，再发送以下资料即可：
+在 Codex 中新建任务，在消息开头输入 `$amazon-image-studio` 调用 Skill。附上几张能看清产品外观与细节的参考图，再填写标题和五点描述即可；尺寸、颜色等信息可按需补充。
+
+直接复制下面的模板，替换方括号内容，与参考图一起发送：
 
 ```text
-产品标题：[粘贴标题]
-产品五点描述：[粘贴五点描述]
-补充：[尺寸、颜色等，没有可省略]
+$amazon-image-studio
+
+请根据附图和以下资料，为这款产品制作 Listing 图片方案。
+
+产品标题：[填写产品标题]
+五点描述：[粘贴产品的五条卖点描述]
+补充信息（选填）：[尺寸、颜色或其他需要说明的信息]
 ```
 
-需要时可输入 `$amazon-image-studio` 调用。默认制作 Listing 图片方案；制作 A+ 时加一句“制作 A+ 图片”，只需策划时加一句“只做方案，不生成图片”。更多说明见[快速开始](skills/amazon-image-studio/references/quick-start.md)。
+没有补充信息时可删除最后一行。需要 A+ 时，将“Listing 图片方案”改为“A+ 图片方案”；只需策划时，加一句“只做方案，不生成图片”。更多说明见[快速开始](skills/amazon-image-studio/references/quick-start.md)。
 
 ### 对话流程
 
