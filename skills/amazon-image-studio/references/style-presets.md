@@ -2,7 +2,16 @@
 
 Use one preset as the visual source of truth for every image in a single job. The preset controls the visual system; product facts, reference-image identity, marketplace rules, and slot objectives still take precedence.
 
-## Selection and inheritance
+## User-uploaded palette reference (overrides built-in selection rules)
+
+- In the initial count/size confirmation, show the five built-in options and always invite the user to upload an image if those palettes do not appeal to them. Use the mandatory Chinese reminder in `SKILL.md`. Do not require an upload to continue with a preset.
+- When the user uploads or designates an image for its colors, inspect the actual image and use it as `custom-reference`. A palette choice replaces the previous palette; do not attach a competing built-in board. Keep product evidence references separate. Do not assume an ordinary product reference is a palette reference without the user's direction. If multiple images have ambiguous roles, ask which image supplies the palette.
+- Extract approximate main, secondary, and accent colors, recording HEX values and their intended roles (background, panels, accents, readable text). Summarize them in Chinese. These colors guide the whole supporting-image/A+ set, never recolor the sold product. Keep typography, lighting, and layout appropriate to the product unless separately specified; uploading a palette image does not authorize copying its other styling.
+- Record `styleTemplate.presetId = "custom-reference"`, `name = "自定义图片配色"`, `selectionMode = "manual"`, the extracted `palette`, `paletteRoles`, and `referenceImage` (an actual accessible local path or host attachment ID). Set `boardAsset` to null. Every slot/module uses `stylePresetId = "custom-reference"`. Do not invent an installed board path or generate a new style board.
+- Preview or clearly identify the selected upload in the chat. For supporting Listing images and A+ modules, pass that same image as the last palette reference using the runtime's supported reference mechanism, alongside the product references. In the final prompt's style block include the extracted palette and roles; replace the general style-reference guard with: “The last reference image is for color palette only. Borrow its main, secondary, and accent colors for backgrounds and graphics. Do not copy its products, text, logos, layout, props, scene, typography, or lighting. Preserve the actual product colors and identity.” Never attach this palette reference to `MAIN`; preserve its pure-white background.
+- If the upload cannot be inspected or passed to generation, explain the limitation and request an accessible image or a user-chosen preset; do not claim to have extracted or used its colors and do not silently fall back. If count and dimensions remain unconfirmed, resolve that existing confirmation before planning; do not add a separate approval round merely for palette extraction.
+
+## Built-in selection and inheritance
 
 - If the user names a preset or clearly asks for a visual direction, use that preset.
 - Otherwise use `clean-tech` as the runtime default, or recommend another preset when the product category, audience, use scenario, or references make the choice obvious. Record the reason in `styleTemplate.selectionReason`.

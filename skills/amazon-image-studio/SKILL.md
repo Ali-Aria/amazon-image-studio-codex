@@ -9,6 +9,7 @@ Use this skill when the user wants Amazon product-image planning, Listing image 
 
 ## Chat-first interaction
 
+- Mandatory palette-reference invitation: after receiving the product title, description, and product reference images, include the template selector in the preflight confirmation and explicitly say: “如果这些配色模板没有你喜欢的，也可以在这一步直接上传一张你喜欢配色的图片。我会提取它的主色、辅助色和点缀色，作为后续生图的配色模板；产品本身颜色保持不变。” This reminder is required even when recommending a default preset; do not defer it until after the formal plan. Uploading is optional. If the user already supplied a palette reference, acknowledge that image instead of asking for it again. If preflight was explicitly waived, include the reminder briefly without imposing another confirmation. Follow the custom palette workflow in [references/style-presets.md](references/style-presets.md).
 - Treat the chat window as the primary user interface. Accept natural-language requests, pasted product copy, and files or images uploaded in the conversation. Do not require the user to fill a form, prepare JSON, or name slot IDs.
 - Infer the task from the conversation: Listing requests route to `listing-plan`, A+ requests route to `aplus-plan`, and requests to create image files route to `image-generation`. If the mode is omitted, default to a Listing plan and state that assumption briefly.
 - Infer the marketplace from the conversation and use `US` when none is provided. Do not ask for information already present in the conversation or reference files.
@@ -37,7 +38,7 @@ Use this skill when the user wants Amazon product-image planning, Listing image 
 
 ## Visual system and style references
 
-- Read [references/style-presets.md](references/style-presets.md) before planning. Select one preset for the entire job. The project-compatible built-ins are `clean-tech`, `natural-warm`, `premium-contrast`, `bright-retail`, and `soft-pink-toddler-girl`.
+- Read [references/style-presets.md](references/style-presets.md) before preflight. Select one visual system for the entire job: a built-in preset or a user-uploaded palette reference (`custom-reference`). The project-compatible built-ins are `clean-tech`, `natural-warm`, `premium-contrast`, `bright-retail`, and `soft-pink-toddler-girl`. The custom palette workflow overrides built-in board selection and attachment rules when a user chooses an uploaded image.
 - A user-provided style or `params.stylePresetId` takes precedence. If neither is provided, use `clean-tech` as the runtime default or record a reasoned automatic recommendation. Expose preset ID, name, selection mode, and reason in `styleTemplate`.
 - Keep the planner's `seriesStyleGuide` style-neutral: it describes product storytelling, cross-image consistency, and evidence handling. It must not lock a competing palette, typography, background, lighting, or decorative system.
 - During image generation, the selected visual style block and the same user-visible style board are the visual source of truth. For supporting Listing images and A+ modules, attach the chosen preset board as the last reference image when available. Do not attach it to `MAIN`; `MAIN` follows the pure-white override.
@@ -47,8 +48,8 @@ Use this skill when the user wants Amazon product-image planning, Listing image 
 
 ## Planning workflow
 
-1. Determine the proposed Listing or A+ count and exact target dimensions. Send the preflight summary with the OpenAI image-generation capability notice, then wait for explicit user confirmation before planning.
-2. Read [references/style-presets.md](references/style-presets.md) and choose the one job-level visual system. In the normal chat result, send the corresponding existing style board preview at the same time as the prompt plan so the user can select or confirm the reference image.
+1. Determine the proposed Listing or A+ count and exact target dimensions. Send the preflight summary with the OpenAI image-generation capability notice, all five template choices, and the mandatory invitation to upload a palette reference, then wait for explicit user confirmation before planning.
+2. Resolve the job-level visual system using [references/style-presets.md](references/style-presets.md). If the user chooses an uploaded palette reference, inspect it and summarize its palette before proceeding; uploading an image alone does not confirm pending count or dimensions. In the normal chat result, show the selected reference alongside the preset alternatives and the prompt plan.
 3. Extract `product.title` from an explicit Listing/Product Title field. If absent, infer the most credible title from the Listing text and return `product_title_inferred`; if none can be recovered, use a safe fallback and return `product_title_missing`.
 4. For `listing-plan`, read [references/amazon-listing.md](references/amazon-listing.md), produce the confirmed 7–12 slots, and use the project image kinds: `main`, `lifestyle`, `detail`, `scale`, `bundle`, and `steps`.
 5. For `aplus-plan`, read [references/amazon-aplus.md](references/amazon-aplus.md), use the confirmed content type (`standard`, `standard-large`, `premium`, or `mobile`), and produce the confirmed module sequence and sizes.

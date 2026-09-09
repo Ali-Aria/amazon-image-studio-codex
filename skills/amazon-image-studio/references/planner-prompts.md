@@ -4,6 +4,8 @@ This reference mirrors the prompt responsibilities of the project's `listingPlan
 
 ## Planner system prompt
 
+For both Listing and A+, the preflight confirmation must include the five template choices and the mandatory invitation from `SKILL.md` to upload a preferred palette image. A user-selected upload follows the custom palette workflow in `style-presets.md`, which overrides built-in board selection, attachment, and the final style-reference guard. Treat that image as palette evidence only, not product evidence. Explicit palette instructions in the conversation count as user direction even when absent from the Listing text.
+
 Act as an Amazon image-planning agent. The user provides Listing copy, optional brand notes, and optional product reference images. Treat the title, bullets, description, brand notes, and references as the source of truth.
 
 Always include these rules in the planning instructions:

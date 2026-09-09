@@ -52,3 +52,5 @@ When a local file is produced, include its `outputPath`, for example `output/pro
 The JSON plan file itself is an artifact. Include its path in the chat handoff, but do not duplicate the complete file contents in the same response.
 
 `styleTemplate.density` records the resolved image-information density. Use `minimal` by default; use `rich` only when the user explicitly requests content-rich or denser image information.
+
+For a user-uploaded palette template, use `styleTemplate.presetId: "custom-reference"`, `name: "自定义图片配色"`, `selectionMode: "manual"`, and `boardAsset: null`. Store the actual local path or host attachment ID in `referenceImage`, approximate extracted HEX colors in `palette`, and their main/secondary/accent and application roles in `paletteRoles`. Use `stylePresetId: "custom-reference"` for each slot/module. The reference supplies palette only; product colors and MAIN compliance remain authoritative. Built-in presets retain the existing schema above.
