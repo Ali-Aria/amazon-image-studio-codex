@@ -1,171 +1,130 @@
 # Amazon Image Studio Codex
 
-一个面向 Codex 的 Amazon 商品图片策划与生成 Skill。
+在 Codex 聊天中，用商品标题、描述和参考图制作 Amazon Listing / A+ 图片方案、Prompt，并在环境支持时生成图片。
 
-它根据商品标题、五点描述、产品资料和参考图，为 Amazon Listing 与 A+ 页面生成结构化图片方案、合规检查清单和专业图片 Prompt；在宿主环境支持图片生成时，也可以继续生成图片文件。
+**一个任务处理一个 SKU。支持 Windows 和 macOS，无需填写 JSON。**
 
-这是一个独立项目，面向本地 Codex 聊天窗使用，不依赖原来的 [amazon-image-studio](https://github.com/Ali-Aria/amazon-image-studio) React 工作台。
+## 1. 安装
 
-## 安装
+准备好 Codex、Node.js 和 npm。使用 Git 下载项目，或从 GitHub 下载 ZIP 后解压。以下命令可在 macOS 终端或 Windows PowerShell 中执行：
 
-克隆本仓库后，在项目根目录执行：
-
-```powershell
+```sh
+git clone https://github.com/Ali-Aria/amazon-image-studio-codex.git
+cd amazon-image-studio-codex
 npm run codex:install
 ```
 
-安装脚本会把 `skills/amazon-image-studio` 复制到当前用户的 Codex Skill 目录：
+如果已下载 ZIP，直接在解压后的项目目录执行 `npm run codex:install` 即可。此项目没有 npm 依赖，无需先执行 `npm install`。
 
-```text
-Windows: %USERPROFILE%\\.codex\\skills\\amazon-image-studio\\
-macOS/Linux: ~/.codex/skills/amazon-image-studio/
-```
+安装后重新打开 Codex，或新建任务加载 Skill。
 
-安装完成后重新打开 Codex，或新建一个任务使 Skill 生效。也可以通过环境变量 `CODEX_HOME` 指定 Codex 根目录。
+| 系统 | 默认安装位置 |
+| --- | --- |
+| macOS | `~/.codex/skills/amazon-image-studio/` |
+| Windows | `%USERPROFILE%\.codex\skills\amazon-image-studio\` |
 
-> 注意：如果目标位置已经存在同名 Skill，安装脚本会先替换它。升级前请备份本地修改。
+设置了 `CODEX_HOME` 时，安装到该目录下的 `skills/amazon-image-studio/`。更新时获取最新项目文件，再运行相同安装命令。
 
-## 用户使用：只需在聊天窗对话
+> 安装会替换已有的同名 Skill；如果修改过已安装的文件，请先备份。安装脚本使用跨平台 Node.js API，目前未在真实 Mac 上实测。
 
-安装完成并重新打开 Codex 后，普通用户不需要填写 JSON，也不需要准备固定格式的表单。直接在聊天窗描述需求即可，也可以显式调用：
+## 2. 开始使用
+
+在 Codex 新建任务，粘贴下面的内容，替换商品资料，并上传该 SKU 的产品参考图：
 
 ```text
 $amazon-image-studio
+
+请为这个商品制作 Amazon US Listing 图片。
+SKU：SKU001
+商品标题：[粘贴标题]
+五点描述 / 商品描述：[粘贴描述]
+其他资料：[尺寸、材质、包装内容等；没有可省略]
+
+我已上传产品参考图。
+请先确认图片数量、尺寸和配色，再提供方案与 Prompt。
+方案确认后再生成图片。
 ```
 
-一个窗口只处理一个 SKU。需要同时制作多个商品时，新建多个独立 Codex 任务，在每个任务的底部消息输入框粘贴任务模板，分别替换 SKU、商品资料并上传对应参考图。详细模板和“复制工作目录 / 复制深度链接 / 复制为 Markdown”的区别见 [快速开始](skills/amazon-image-studio/references/quick-start.md)。
+制作 A+ 时，将“Listing 图片”改为“A+ 页面图片”。只需要策划时，加一句“只做方案和 Prompt，不生成图片”。更多示例见[快速开始](skills/amazon-image-studio/references/quick-start.md)。
 
-生成图片 Prompt 方案时，Skill 会同步展示已安装的风格模板图。用户可以回复模板 ID 或名称来选择模板；确认后，模板图会作为 Listing 附图和 A+ 图片的风格参考，`MAIN` 主图不使用模板图并继续遵守纯白背景规则。
+### 对话流程
 
-例如：
+1. **提交资料**：发送标题、描述和产品参考图。
+2. **确认规格与配色**：AI 提出数量、目标尺寸，展示五套模板，等待确认。**没有喜欢的模板，也可以在这一步上传一张喜欢配色的图片。** AI 会提取主色、辅助色和点缀色作为生图配色参考。
+3. **查看方案**：获得中文图片方案和英文 Prompt，可提出修改。
+4. **生成与交付**：按确认的方案逐张生成，保存图片及 JSON 方案文件。
 
-```text
-帮我为这款产品做 Amazon US Listing 图片方案。
-这是商品标题和五点描述：
-[直接粘贴商品资料]
+处理多个商品时，为每个 SKU 新建独立任务，分别上传资料。
 
-我上传了产品参考图。
-```
+## 3. 配色与图片规格
 
-用户可以直接用自然语言提交商品标题、五点描述、产品资料和参考图片，完成：
+回复模板序号或中文名称即可选择，不需要输入英文 ID。
 
-- Amazon Listing 图片策划
-- A+ 页面模块策划
-- 与项目版对齐的统一视觉风格预置库（自动推荐，也可手动指定）
-- 主图与附图合规检查
-- 图片 Prompt 生成
-- 可用时的图片生成任务
-- Markdown、JSON 和本地图片产物输出
+| 序号 | 模板 | 配色特点 | ID（供 AI / 开发使用） |
+| --- | --- | --- | --- |
+| 1 | 清爽科技 | 冷白、浅蓝，整洁理性 | `clean-tech` |
+| 2 | 自然暖调 | 奶油色、木质暖色，亲切自然 | `natural-warm` |
+| 3 | 高级对比 | 深浅对比、克制金色 | `premium-contrast` |
+| 4 | 明亮零售 | 白底、蓝橙色块，醒目易读 | `bright-retail` |
+| 5 | 柔和高级童趣 | 柔粉、奶白、淡紫 | `soft-pink-toddler-girl` |
+| — | 自定义图片配色 | 从你指定的图片中提取配色 | `custom-reference` |
 
-Skill 会自动判断用户要做 Listing、A+ 还是图片生成任务。未指定市场时默认 US；未指定 Listing 图片数量时默认 7 张，即 `MAIN` 加 `PT01`–`PT06`，也支持按项目版规则生成 7–12 张。A+ 默认采用项目版 `standard-large` 模块规格。只有缺少关键事实导致无法安全执行时才会追问一个简短问题，否则会直接继续并标注待核实内容。
+未指定风格时，默认使用清爽科技，也可根据商品推荐其他模板。图片信息密度默认“简约”（`minimal`），可改为“内容丰富”（`rich`）。
 
-Skill 会把商品资料视为事实来源，不虚构尺寸、材质、认证、功能和包装内容。图片能力不可用时，仍然完成策划和 Prompt，并返回明确的 `image_generation_unavailable` warning。
+自定义参考图只用于配色，不复制其中的产品、文字或布局，也不改变商品本身颜色。整套 Listing 附图和 A+ 使用统一视觉系统；`MAIN` 主图保持纯白背景，不附加风格参考图。
 
-每个任务会先选择一套统一视觉风格，再让 Listing 和 A+ 计划继承同一套色板、字体方向、光线、背景语言和构图规则。
-
-内置风格与项目版 ID 对齐：`clean-tech`、`natural-warm`、`premium-contrast`、`bright-retail`，以及适合幼儿女孩产品的 `soft-pink-toddler-girl`。
-
-五套风格现在都带有对应的图片风格板，统一存放在 `skills/amazon-image-studio/assets/style-presets/`。可在聊天中直接指定风格，也可以使用默认 `clean-tech`。支持 `minimal`（简约，默认）和 `rich`（内容丰富）两种图片信息密度，也可以在聊天中直接说“简约”或“内容丰富”。
-
-在当前项目中保存生成图片时，建议按 Listing 商品标题归档：
-
-```text
-output/
-└── <product-slug>/
-    ├── listing/
-    │   ├── <product-slug>__MAIN.png
-    │   └── <product-slug>__PT01.png
-    └── aplus/
-        └── <product-slug>__A+L01.png
-```
-
-仓库中的 `output/` 仅用于本地生成产物，不是安装 Skill 所必需的内容。
-
-## 预览
-
-![image-20260903180220549](https://niaoyu.oss-cn-shenzhen.aliyuncs.com/img/image-20260903180220549.png)
-
-![image-20260903180246089](https://niaoyu.oss-cn-shenzhen.aliyuncs.com/img/image-20260903180246089.png)
-
-![image-20260903180306654](https://niaoyu.oss-cn-shenzhen.aliyuncs.com/img/image-20260903180306654.png)
-
-## 支持的任务
-
-### Listing 图片
-
-未指定数量时，默认生成 7 个图片位：`MAIN` 加 `PT01`–`PT06`；也支持在 7–12 张范围内指定数量。图片用途包括主图、生活方式图、细节图、尺寸/比例图、套装图和使用步骤图。
-
-### A+ 页面
-
-支持标准 A+、大尺寸标准 A+、Premium A+ 和移动端 A+ 的模块规划。未提供尺寸或内容类型时，会使用默认规格完成方案，并标记待确认项。
-
-### 图片生成
-
-每个图片位或 A+ 模块单独生成，不制作未经请求的拼图。默认生成尺寸为最长边 2048px，并保留目标比例。
-
-## 视觉风格
-
-内置风格预置：
-
-| ID | 风格 |
+| 项目 | 未指定时的提议 |
 | --- | --- |
-| `clean-tech` | 清洁、现代、科技感 |
-| `natural-warm` | 自然、温暖、生活方式 |
-| `premium-contrast` | 高级、强对比、精致 |
-| `bright-retail` | 明亮、零售、电商感 |
-| `soft-pink-toddler-girl` | 柔和、粉色、幼儿女孩场景 |
+| 市场 | Amazon US |
+| Listing | 共 7 张：`MAIN` + `PT01`–`PT06`，每张目标尺寸 2048 × 2048；支持指定 7–12 张 |
+| A+ | `standard-large`，共 5 个模块，每个目标尺寸 970 × 600 |
 
-默认推荐 `clean-tech`。图片信息密度默认为 `minimal`，也可以指定 `rich`，或直接说“简约/内容丰富”。
+A+ 还支持标准、Premium 和移动端规格。数量与目标尺寸在正式策划前确认。**目标尺寸用于构图与交付规划，实际生成尺寸和比例取决于 Codex 提供的图片能力，不保证原生输出完全一致。**
 
-## 重要规则
+## 4. 交付与使用边界
 
-- 一个 Codex 任务或窗口只处理一个 SKU。
-- 商品资料和参考图是产品事实的唯一来源，不虚构材质、尺寸、认证、功能或包装内容。
-- Listing `MAIN` 主图使用纯白 RGB `255,255,255` 背景。
-- 主图不放价格、评价、徽章、Amazon 标识、装饰文字或未经证实的宣传语。
-- Listing 附图和 A+ 模块保持同一套视觉风格。
-- 生成图片前先确认方案；没有实际图片产物时，不声称图片已经生成。
+- 聊天中展示简洁的中文方案；完整 JSON 保存为文件。图片 Prompt 使用英文，图中文字使用目标市场语言。
+- 本地输出默认放在项目的 `output/<SKU或商品名>/listing/` 或 `aplus/` 中；同名文件增加版本号，不覆盖已有产物。
+- 商品资料和产品参考图是事实依据，不虚构尺寸、材质、认证、功能或包装内容。
+- 主图使用纯白 RGB `255,255,255` 背景，不添加价格、评价、徽章或装饰文字。
+- 实际生图需要 Codex 提供内置图片生成工具。工具不可用时，交付方案与 Prompt，并明确说明未生成图片。
 
-详细运行契约见 [`SKILL.md`](skills/amazon-image-studio/SKILL.md)，首次使用模板见[快速开始](skills/amazon-image-studio/references/quick-start.md)。
+## 常见问题
 
-## 模板图无法显示
+**模板图片不显示？** 重新执行安装命令，确保安装了整个 Skill 文件夹，包含 `assets/style-presets/` 中的五张 PNG，而非仅复制 `SKILL.md`。图片预览应使用当前用户安装目录下的绝对路径；无法预览时，Skill 会列出五套中文选项，仍可继续选择。
 
-模板图安装后位于当前用户的 Codex Skill 目录，例如 Windows：
+**安装命令提示找不到 npm？** 先安装 Node.js 和 npm，再重新打开终端执行。
 
-```text
-C:/Users/<username>/.codex/skills/amazon-image-studio/assets/style-presets/clean-tech.png
-```
+**需要运行网页或配置 API Key 吗？** 不需要。此项目直接在 Codex 聊天中使用，不依赖原来的 [React 工作台](https://github.com/Ali-Aria/amazon-image-studio)。生图默认使用 Codex 内置工具。
 
-注意 `username` 和 `.codex` 之间必须有路径分隔符。不要只复制 `SKILL.md`，需要通过 `npm run codex:install` 安装整个 `skills/amazon-image-studio` 文件夹，然后重新打开 Codex。聊天中显示一个 `clean-tech.png` 文件卡片也不等于已经显示图片预览；需要由 Codex 附加实际图片内容或使用可渲染的本地图片路径。
+## AI 与维护者入口
 
-## 开发命令
+README 用于安装和上手；完整执行规则以 [`SKILL.md`](skills/amazon-image-studio/SKILL.md) 为准，按任务读取其引用文件。
 
-| 命令 | 用途 |
+| 文件 | 用途 |
 | --- | --- |
-| `npm run codex:install` | 安装或更新本地 Codex Skill |
-| `npm test` | 运行项目测试 |
+| [SKILL.md](skills/amazon-image-studio/SKILL.md) | 交互确认、策划、生图与产物规则 |
+| [style-presets.md](skills/amazon-image-studio/references/style-presets.md) | 内置模板、自定义配色与参考图使用规则 |
+| [planner-prompts.md](skills/amazon-image-studio/references/planner-prompts.md) | Planner 与最终生图 Prompt 契约 |
+| [output-schema.md](skills/amazon-image-studio/references/output-schema.md) | JSON 方案字段 |
+| [amazon-listing.md](skills/amazon-image-studio/references/amazon-listing.md) / [amazon-aplus.md](skills/amazon-image-studio/references/amazon-aplus.md) | Listing / A+ 规格与约束 |
+| [install-codex-skill.mjs](scripts/install-codex-skill.mjs) | 跨平台安装脚本 |
 
-## 项目结构
+`npm run codex:install` 安装或更新本地 Skill。`npm test` 调用 Node.js 测试运行器；当前没有测试用例，不能据此认定平台兼容性已验证。
 
-```text
-amazon-image-studio-codex/
-├── skills/amazon-image-studio/
-│   ├── SKILL.md
-│   ├── agents/openai.yaml
-│   ├── assets/style-presets/      # 项目版 5 张风格参考板
-│   └── references/                # 策划、规格、Prompt 与输出契约
-├── scripts/
-│   └── install-codex-skill.mjs
-├── test/
-├── output/                        # 本地生成产物
-├── LICENSE
-└── package.json
-```
+## 效果预览
 
-## 运行要求
+<details>
+<summary>展开查看三张示例</summary>
 
-这是一个 Codex Skill，不是独立的图片生成软件。图片策划可以在支持文本和文件输入的 Codex 环境中完成；实际图片生成和文件保存取决于宿主环境是否提供相应能力。用户直接在 Codex 聊天窗中使用即可。
+![Amazon 图片工作室使用示例 1](https://niaoyu.oss-cn-shenzhen.aliyuncs.com/img/image-20260903180220549.png)
+
+![Amazon 图片工作室使用示例 2](https://niaoyu.oss-cn-shenzhen.aliyuncs.com/img/image-20260903180246089.png)
+
+![Amazon 图片工作室使用示例 3](https://niaoyu.oss-cn-shenzhen.aliyuncs.com/img/image-20260903180306654.png)
+
+</details>
 
 ## 许可证
 
-[MIT License](LICENSE)
+[MIT](LICENSE)
