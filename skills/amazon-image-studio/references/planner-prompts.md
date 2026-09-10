@@ -63,20 +63,25 @@ Every Listing plan must contain `slot`, `label`, `kind`, `planMarkdown`, `prompt
 
 ## A+ planning prompt
 
-The chat layer must obtain explicit user confirmation of the A+ content type, total module count, and exact target dimensions before invoking the planner. The confirmation must disclose that these dimensions are planning/delivery targets, while native output dimensions and aspect ratio depend on OpenAI's currently available image-generation capabilities and cannot be guaranteed. Until confirmation, return only the concise preflight proposal; do not produce module strategy, JSON plans, or image prompts. For an unspecified A+ request, propose `standard-large`: 5 modules, all 970x600.
+For `standard-large`, confirmation of upload 970x600 plus “97:60, largest supported generation resolution” is sufficient; it overrides fixed-generation-dimension confirmation requirements. Follow the runtime sizing rules in `amazon-aplus.md`, including truthful reporting when maximum size or exact ratio cannot be verified.
+
+The chat layer must obtain explicit user confirmation of the A+ content type, total module count, and exact upload and generation dimensions before invoking the planner. The confirmation must disclose that these dimensions are planning/delivery targets, while native output dimensions and aspect ratio depend on OpenAI's currently available image-generation capabilities and cannot be guaranteed. Until confirmation, return only the concise preflight proposal; do not produce module strategy, JSON plans, or image prompts. For an unspecified A+ request, propose `standard-large`: 5 modules, upload target 970x600; generation at the largest supported resolution with the 97:60 aspect ratio. Include `mobile`（手机 A+）as a selectable alternative: 5 modules, upload 600x450, generation target 2352x1776. Include `advanced`（高级 A+）as a selectable alternative: 6 modules, four modules at 1464:600 and two modules at 4:3; generation uses the largest supported canvas at each ratio, with preferred targets 2928x1200 and 2400x1800 when a concrete target is required.
 
 Support these content types and use their exact module families and upload sizes:
 
-| Content type | Module sequence and upload size |
-|---|---|
-| `standard` | `A+S01` Wide Hero 970x600; `A+S02`–`A+S04` Single Image 970x600; `A+S05`–`A+S08` Highlight Tile 220x220 |
-| `standard-large` | `A+L01` Wide Hero 970x600; `A+L02`–`A+L05` Single Image 970x600 |
-| `premium` | `A+P01` Hero Banner 1464x600; `A+P02`–`A+P04` Feature Image 970x600; `A+P05`–`A+P06` Brand Story 463x625 |
-| `mobile` | `A+M01`–`A+M05` Mobile Hero/Feature 600x450 |
+| Content type | Module sequence | Upload size | Generation size |
+|---|---|---|---|
+| `standard` | `A+S01` Wide Hero; `A+S02`–`A+S04` Single Image; `A+S05`–`A+S08` Highlight Tile | 970x600; 970x600; 220x220 | 970x600; 970x600; 220x220 |
+| `standard-large` | `A+L01` Wide Hero; `A+L02`–`A+L05` Single Image | 970x600 | Largest supported resolution at 97:60 |
+| `premium` | `A+P01` Hero Banner; `A+P02`–`A+P04` Feature Image; `A+P05`–`A+P06` Brand Story | 1464x600; 970x600; 463x625 | 1464x600; 970x600; 463x625 |
+| `mobile`（手机 A+） | `A+M01`–`A+M05` Mobile Hero/Feature | 600x450 | 2352x1776 |
+| `advanced`（高级 A+） | `A+X01` Hero/Brand KV; `A+X02` Core Benefit; `A+X03` Scene/Benefit; `A+X04` Hotspot-style Feature; `A+X05` Single Image; `A+X06` Single Image or Video-cover Alternative | 1464x600 for `A+X01`–`A+X04`; 800x600 (4:3 reference) for `A+X05`–`A+X06` | Largest supported 1464:600 canvas (preferred 2928x1200); largest supported 4:3 canvas (preferred 2400x1800) |
 
 Return exactly the requested module sequence and include `moduleType`, `uploadSize`, `generationSize`, `planMarkdown`, `textTitle`, `textBody`, `prompt`, `negativePrompt`, `stylePresetId`, `styleOverrides`, `fileName`, and `relativePath`.
 
-For `standard` and `standard-large`, set both `uploadSize` and `generationSize` of the first module to 970x600. Do not ask the image runtime to generate 970x300. Keep the main subject and essential copy inside a centered 970x300-safe region when later banner cropping may be required.
+For `standard`, set both `uploadSize` and `generationSize` of the first module to 970x600. For `standard-large`, set all five `uploadSize` values to 970x600 and resolve generation dimensions at the largest supported 97:60 resolution. Do not ask the image runtime to generate 970x300. Keep the main subject and essential copy inside a centered safe region equivalent to 970x300 at the upload scale when later banner cropping may be required. For `mobile`, set every module's `uploadSize` to 600x450 and `generationSize` to 2352x1776.
+
+For `advanced`, return exactly six modules in the order `A+X01` through `A+X06`. Preserve the 1464:600 ratio for the first four and 4:3 for the last two. The 800x600 size is a 4:3 reference/upload target from the proposed planning set, not a universal Amazon module guarantee; keep the account-specific upload requirement visible as a verification warning. Use the largest generation canvas supported by the runtime while preserving each ratio, with 2928x1200 and 2400x1800 as preferred concrete targets. Treat hotspot and video-cover roles as visual fallbacks unless the destination editor explicitly supports the corresponding interactive or video feature.
 
 For Mobile A+, use one clear message per module, large product evidence, short mobile-readable copy, and no dense multi-column composition. A+ should add product/brand value rather than simply duplicating the Listing gallery.
 

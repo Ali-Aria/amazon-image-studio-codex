@@ -54,3 +54,9 @@ The JSON plan file itself is an artifact. Include its path in the chat handoff, 
 `styleTemplate.density` records the resolved image-information density. Use `minimal` by default; use `rich` only when the user explicitly requests content-rich or denser image information.
 
 For a user-uploaded palette template, use `styleTemplate.presetId: "custom-reference"`, `name: "自定义图片配色"`, `selectionMode: "manual"`, and `boardAsset: null`. Store the actual local path or host attachment ID in `referenceImage`, approximate extracted HEX colors in `palette`, and their main/secondary/accent and application roles in `paletteRoles`. Use `stylePresetId: "custom-reference"` for each slot/module. The reference supplies palette only; product colors and MAIN compliance remain authoritative. Built-in presets retain the existing schema above.
+
+For `mobile`（手机 A+）, set every module's `uploadSize` to `600x450` and `generationSize` to `2352x1776`.
+
+For `advanced`（高级 A+）, use modules `A+X01`–`A+X06` in order. Set `A+X01`–`A+X04` to the `1464:600` ratio and `A+X05`–`A+X06` to 4:3. Preserve these ratios while using the largest supported generation canvas; preferred concrete targets are `2928x1200` and `2400x1800`. Treat `800x600` as a 4:3 upload/reference target from the planning set and keep account-specific module requirements as a warning. Hotspot and video-cover roles do not guarantee interactive or video behavior.
+
+For `standard-large`, keep `uploadSize` at `970x600`, add `generationAspectRatio: "97:60"` and `generationSizePolicy: "largest-supported"` to each module. Set `generationSize` to the resolved target dimensions when known, or null when the runtime controls sizing and no dimensions can be established. Record actual returned dimensions in the image artifact; do not label an unverified target as the actual or maximum size.
