@@ -4,6 +4,21 @@ Use the project planner contract in [planner-prompts.md](planner-prompts.md). Se
 
 ## Content types and module specifications
 
+### Mandatory user-facing format comparison
+
+On the first A+ preflight, display this table in chat, together with the existing palette selector and capability notice. These are project planning options. Mark 普通 A+ as recommended unless the user already selected another format. Keep all four rows visible. Do not offer the legacy mixed-size `premium` preset in this selector.
+
+| 选择 | A+ 方案 | 默认图片数 | 上传／参考尺寸 | 生图尺寸策略 |
+| --- | --- | --- | --- | --- |
+| A1 | 普通 A+（默认推荐） | 5 张 | 全部 970×600 | 保持 97:60，使用工具支持的最大尺寸 |
+| A2 | 手机 A+ | 5 张 | 全部 600×450 | 目标 2352×1776 |
+| A3 | 高级 A+（横幅＋说明图） | 6 张 | 4 张 1464×600＋2 张 800×600 | 前 4 张保持 61:25，后 2 张保持 4:3，使用工具支持的最大尺寸 |
+| A4 | 标准 A+（含小图块） | 8 张 | 4 张 970×600＋4 张 220×220 | 对应 970×600／220×220 |
+
+Map A1 to `standard-large`, A2 to `mobile`, A3 to `advanced`, and A4 to `standard`. Use A-prefixed option numbers to distinguish format choices from the palette selector's 1–5. Accept Chinese names and contextual replies such as “A2，配色用推荐的” or “普通 A+，按推荐方案继续”. If a bare number could mean either format or palette, clarify only that ambiguity. A format-only selection changes the proposed format; resolve any remaining confirmation in the same preflight exchange. “按默认继续” accepts the displayed default proposal. Do not produce the formal plan or prompts before the existing preflight requirements are met, and do not treat the table itself as a formal image plan.
+
+### Internal format mapping
+
 | Content type | Module sequence | Upload size | Generation size |
 |---|---|---|---|
 | `standard` | `A+S01` wide-hero; `A+S02`–`A+S04` single-image; `A+S05`–`A+S08` highlight-tile | 970x600; 970x600; 220x220 | 970x600; 970x600; 220x220 |
