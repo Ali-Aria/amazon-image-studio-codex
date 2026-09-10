@@ -6,6 +6,34 @@
 
 ## 1. 安装
 
+### 让 Codex 帮你安装
+
+把下面这段发送到能访问本机文件和终端的 Codex 任务中即可：
+
+```text
+请帮我安装这个仓库里的 amazon-image-studio Skill：
+https://github.com/Ali-Aria/amazon-image-studio-codex
+请按 README 的安装说明完成安装并检查文件是否齐全。如果已安装，请先备份再更新。
+```
+
+也可以直接粘贴仓库链接，并补一句“帮我安装这个 Skill”。
+
+<details>
+<summary>给 Codex 的安装执行说明</summary>
+
+以下步骤适用于用户明确要求安装或更新本 Skill 的任务；仅阅读仓库不代表要求安装。
+
+1. 检查本机系统、Git、Node.js/npm，以及是否设置 `CODEX_HOME`。安装源是本仓库的 `skills/amazon-image-studio/`，不是仓库根目录，也不是单独的 `SKILL.md`。无需启动网页或配置图片 API Key。
+2. 将仓库下载到可写的工作目录。已有本仓库时可复用，但先检查本地改动；不要覆盖用户修改。需要全新副本时使用新的目录，避免同名冲突。没有 Git 时可下载仓库 ZIP 并解压。
+3. 安装目标为 `${CODEX_HOME}/skills/amazon-image-studio/`；未设置该变量时，使用当前用户主目录下的 `.codex/skills/amazon-image-studio/`。不要照抄作者的本机路径。目标已存在时，先完整复制到独立备份目录，并确认备份成功；下方安装脚本会替换旧目录。
+4. 在仓库根目录执行 `npm run codex:install`。无需 `npm install`。如果没有 Node.js/npm，可将 `skills/amazon-image-studio/` 整个目录复制到上述目标位置；同样先备份已有版本，不要只复制入口文件。
+5. 检查安装目录中的 `SKILL.md`、`agents/openai.yaml`、`references/` 和 `assets/style-presets/` 是否齐全，并确认五张模板 PNG 均已复制。仅下载仓库不算完成安装。
+6. 告知用户实际安装路径、备份路径（如有），并提示重新打开 Codex 或新建任务，再输入 `$amazon-image-studio` 使用。若当前环境无法写入本机，说明限制并提供下方手动安装步骤，不要声称已安装。
+
+</details>
+
+### 手动安装
+
 准备好 Codex、Node.js 和 npm。使用 Git 下载项目，或从 GitHub 下载 ZIP 后解压。以下命令可在 macOS 终端或 Windows PowerShell 中执行：
 
 ```sh
