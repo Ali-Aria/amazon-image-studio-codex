@@ -22,7 +22,7 @@ Map A1 to `standard-large`, A2 to `mobile`, A3 to `advanced`, and A4 to `standar
 | Content type | Module sequence | Upload size | Generation size |
 |---|---|---|---|
 | `standard` | `A+S01` wide-hero; `A+S02`–`A+S04` single-image; `A+S05`–`A+S08` highlight-tile | 970x600; 970x600; 220x220 | 970x600; 970x600; 220x220 |
-| `standard-large` | `A+L01` wide-hero; `A+L02`–`A+L05` single-image | 970x600 | Largest supported resolution at 97:60 |
+| `standard-large` | `A+L01` Header Banner / wide-hero; `A+L02`–`A+L05` single-image | 970x600 working canvas; `A+L01` uses a centered 970x300 banner-safe band | Largest supported resolution at 97:60 |
 | `premium` | `A+P01` hero-banner; `A+P02`–`A+P04` feature-image; `A+P05`–`A+P06` brand-story | 1464x600; 970x600; 463x625 | 1464x600; 970x600; 463x625 |
 | `mobile`（手机 A+） | `A+M01`–`A+M05` mobile hero/feature; compose each independently for a narrow screen | 600x450 | 2352x1776 |
 | `advanced`（高级 A+） | `A+X01` hero/brand KV; `A+X02` core benefit; `A+X03` scene/benefit; `A+X04` hotspot-style feature; `A+X05` single-image explanation; `A+X06` single-image or video-cover alternative | 1464x600 for `A+X01`–`A+X04`; 800x600 (4:3 reference) for `A+X05`–`A+X06` | Largest supported canvas at 1464:600 for `A+X01`–`A+X04` (preferred 2928x1200); largest supported 4:3 canvas for `A+X05`–`A+X06` (preferred 2400x1800) |
@@ -37,7 +37,23 @@ Before creating the A+ plan, show the proposed content type, total module count,
 
 ### Default A+ generation sizing
 
-For `standard-large`, confirm 5 images, upload 970x600, and generation at the largest supported resolution preserving 97:60. This ratio-and-resolution policy satisfies preflight; do not require users to choose a fixed pixel count. Use the current tool's documented capabilities to select the largest matching output, honoring explicit user limits. Do not invent a maximum or treat an example size as a cap. If the tool does not expose size controls or a supported-size list, request the ratio and highest available resolution in the prompt and report the actual output; do not claim that a maximum was verified. If exact-ratio native output is unavailable, disclose the limitation and reserve a safe composition area; do not stretch the product to force the ratio. Apply any 970x300 safe region proportionally to the larger canvas.
+For `standard-large`, confirm 5 images, a 970x600 working canvas, and generation at the largest supported resolution preserving 97:60. This ratio-and-resolution policy satisfies preflight; do not require users to choose a fixed pixel count. Use the current tool's documented capabilities to select the largest matching output, honoring explicit user limits. Do not invent a maximum or treat an example size as a cap. If the tool does not expose size controls or a supported-size list, request the ratio and highest available resolution in the prompt and report the actual output; do not claim that a maximum was verified. If exact-ratio native output is unavailable, disclose the limitation and reserve a safe composition area; do not stretch the product to force the ratio. For `A+L01`, apply the 970x300 banner-safe region proportionally to the larger canvas and keep its composition visibly wider and simpler than the later information modules.
+
+## Module-level variation
+
+Use one consistent visual system across the set, but do not use one repeated layout. The selected palette, typography feel, lighting direction, material language, and product identity stay consistent; camera distance, product angle, product placement, scene, evidence type, information treatment, and copy zone should change when the module role changes.
+
+For the default `standard-large` set, the planner should normally allocate these distinct roles:
+
+| 模块 | 默认角色 | 画面差异要求 |
+| --- | --- | --- |
+| `A+L01` | 品牌 / 首屏 Banner | 宽幅、低高度视觉节奏，产品和核心价值位于安全带内，不使用后续模块的卡片式居中构图 |
+| `A+L02` | 核心卖点证据 | 详情特写、结构标注或信息化布局，突出一个具体事实 |
+| `A+L03` | 使用场景 | 环境化或动作化展示，改变产品位置、镜头距离和背景层次 |
+| `A+L04` | 材质 / 结构 / 人机细节 | 近距离展示与 L02 不同的证据，避免重复同一角度 |
+| `A+L05` | 第二价值点 | 根据事实选择组合、步骤、护理、第二场景或品牌价值，不重复前面构图 |
+
+如果产品资料不支持某个角色，替换成另一个有事实依据的角色，并在方案中说明原因。每个模块的 `planMarkdown` 必须写清“叙事角色、主证据、构图族、与其他模块的差异”。
 
 ## Required output per module
 
@@ -58,7 +74,7 @@ Use the project-compatible fields below. Preserve legacy aliases when needed:
 
 ## Layout, copy, and compliance
 
-- Keep product identity, product scale, lighting direction, palette, typography feel, background language, and graphic grammar consistent across all modules.
+- Keep product identity, product scale, lighting direction, palette, typography feel, background language, and graphic grammar consistent across all modules, while deliberately varying composition and evidence type by module role.
 - Use short, scannable copy inside images and keep longer copy in `textBody`. Preserve a central mobile-safe area and test legibility at the target upload size.
 - For mobile A+, set every module's `uploadSize` to 600x450 and `generationSize` to 2352x1776. Keep one clear message per module, use large product evidence, and do not reuse a desktop composition by simply cropping it.
 - For advanced A+, use exactly six modules in this order: `A+X01` hero/brand KV, `A+X02` core benefit banner, `A+X03` scene or second benefit banner, `A+X04` hotspot-style feature display, `A+X05` single-image explanation, and `A+X06` single-image explanation or video-cover alternative. Keep `A+X01`–`A+X04` at the 1464:600 ratio and `A+X05`–`A+X06` at 4:3. Treat the screenshot's 1464x600 and 800x600 as upload/reference sizes, not universal platform guarantees; verify the account's actual module requirements before publishing. Generate at the largest supported canvas that preserves each ratio, preferring 2928x1200 and 2400x1800 when a concrete target is required.

@@ -4,6 +4,8 @@
 
 **一个任务处理一个 SKU。支持 Windows 和 macOS，无需填写 JSON。**
 
+> 更新记录按周维护，见[更新日志](CHANGELOG.md)。GitHub 页面默认只展开当前周，历史周次保持折叠。
+
 ## 1. 安装
 
 ### 让 Codex 帮你安装
@@ -75,7 +77,7 @@ $amazon-image-studio
 
 ### 对话流程
 
-提出制作 A+ 图片后，AI 会默认推荐普通 A+，并在首次确认中列出规格对照表：普通 A+、手机 A+、高级 A+、标准 A+（含小图块）。表中展示各方案的图片数量、上传／参考尺寸和生图尺寸策略。直接回复方案编号（如“A2”）或中文名称即可选择，配色也在这一步确认。
+提出制作 A+ 图片后，AI 会默认推荐普通 A+，并在首次确认中强制列出四种方案的规格对照表：普通 A+、手机 A+、高级 A+、标准 A+（含小图块）。表中展示各方案的图片数量、上传／参考尺寸和生图尺寸策略。直接回复方案编号（如“A2”）或中文名称即可选择，配色也在这一步确认。
 
 1. **提交资料**：发送标题、描述和产品参考图。
 2. **确认规格与配色**：AI 提出数量、目标尺寸，展示五套模板，等待确认。**没有喜欢的模板，也可以在这一步上传一张喜欢配色的图片。** AI 会提取主色、辅助色和点缀色作为生图配色参考。
@@ -97,7 +99,7 @@ $amazon-image-studio
 | 5 | 柔和高级童趣 | 柔粉、奶白、淡紫 | `soft-pink-toddler-girl` |
 | — | 自定义图片配色 | 从你指定的图片中提取配色 | `custom-reference` |
 
-未指定风格时，默认使用系统根据产品推荐的配色模板。图片信息密度默认“简约”（`minimal`），可改为“内容丰富”（`rich`）。
+未指定风格时，默认使用系统根据产品推荐的配色模板。Listing 图片默认“简约”（`minimal`）；普通/标准、Premium 和高级 A+ 的大图模块默认“内容丰富”（`rich`），手机 A+ 和小图块默认简约。也可以直接回复“简约”或“内容丰富”覆盖默认值。
 
 自定义参考图只用于配色，不复制其中的产品、文字或布局，也不改变商品本身颜色。整套 Listing 附图和 A+ 使用统一视觉系统；`MAIN` 主图保持纯白背景，不附加风格参考图。
 
@@ -109,7 +111,7 @@ $amazon-image-studio
 | 手机 A+ | 共 5 个模块；上传尺寸 600 × 450，生图目标尺寸 2352 × 1776 |
 | 高级 A+ | 共 6 个模块：4 个 1464:600 横幅 + 2 个 4:3 说明图；生图按比例使用当前工具支持的最大画布（优先 2928 × 1200 / 2400 × 1800） |
 
-A+ 还支持标准、Premium、移动端和高级 A+ 规格。数量、上传尺寸和生图比例在正式策划前确认。高级 A+ 中的 Hotspot 和视频封面是视觉策划角色，是否能实现交互或视频播放取决于 Amazon 账号和内容编辑器。**目标尺寸用于构图与交付规划，实际生成尺寸和比例取决于 Codex 提供的图片能力，不保证原生输出完全一致。**
+A+ 预检中的四个选项对应 `standard-large`、`mobile`、`advanced` 和 `standard`。`premium` 仍作为兼容的内部规划类型保留，但不作为这张用户选择表的独立选项。数量、上传尺寸和生图比例在正式策划前确认。高级 A+ 中的 Hotspot 和视频封面是视觉策划角色，是否能实现交互或视频播放取决于 Amazon 账号和内容编辑器。**目标尺寸用于构图与交付规划，实际生成尺寸和比例取决于 Codex 提供的图片能力，不保证原生输出完全一致。**
 
 ## 4. 交付与使用边界
 
@@ -139,6 +141,7 @@ README 用于安装和上手；完整执行规则以 [`SKILL.md`](skills/amazon-
 | [output-schema.md](skills/amazon-image-studio/references/output-schema.md) | JSON 方案字段 |
 | [amazon-listing.md](skills/amazon-image-studio/references/amazon-listing.md) / [amazon-aplus.md](skills/amazon-image-studio/references/amazon-aplus.md) | Listing / A+ 规格与约束 |
 | [install-codex-skill.mjs](scripts/install-codex-skill.mjs) | 跨平台安装脚本 |
+| [CHANGELOG.md](CHANGELOG.md) | 按周记录功能、规则与文档更新 |
 
 `npm run codex:install` 安装或更新本地 Skill。`npm test` 调用 Node.js 测试运行器；当前没有测试用例，不能据此认定平台兼容性已验证。
 

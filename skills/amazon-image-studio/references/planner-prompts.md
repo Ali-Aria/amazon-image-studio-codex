@@ -74,18 +74,43 @@ Support these content types and use their exact module families and upload sizes
 | Content type | Module sequence | Upload size | Generation size |
 |---|---|---|---|
 | `standard` | `A+S01` Wide Hero; `A+S02`–`A+S04` Single Image; `A+S05`–`A+S08` Highlight Tile | 970x600; 970x600; 220x220 | 970x600; 970x600; 220x220 |
-| `standard-large` | `A+L01` Wide Hero; `A+L02`–`A+L05` Single Image | 970x600 | Largest supported resolution at 97:60 |
+| `standard-large` | `A+L01` Header Banner / Wide Hero; `A+L02`–`A+L05` Single Image | 970x600 working canvas; keep `A+L01` content inside a centered 970x300 banner-safe band | Largest supported resolution at 97:60 |
 | `premium` | `A+P01` Hero Banner; `A+P02`–`A+P04` Feature Image; `A+P05`–`A+P06` Brand Story | 1464x600; 970x600; 463x625 | 1464x600; 970x600; 463x625 |
 | `mobile`（手机 A+） | `A+M01`–`A+M05` Mobile Hero/Feature | 600x450 | 2352x1776 |
 | `advanced`（高级 A+） | `A+X01` Hero/Brand KV; `A+X02` Core Benefit; `A+X03` Scene/Benefit; `A+X04` Hotspot-style Feature; `A+X05` Single Image; `A+X06` Single Image or Video-cover Alternative | 1464x600 for `A+X01`–`A+X04`; 800x600 (4:3 reference) for `A+X05`–`A+X06` | Largest supported 1464:600 canvas (preferred 2928x1200); largest supported 4:3 canvas (preferred 2400x1800) |
 
 Return exactly the requested module sequence and include `moduleType`, `uploadSize`, `generationSize`, `planMarkdown`, `textTitle`, `textBody`, `prompt`, `negativePrompt`, `stylePresetId`, `styleOverrides`, `fileName`, and `relativePath`.
 
-For `standard`, set both `uploadSize` and `generationSize` of the first module to 970x600. For `standard-large`, set all five `uploadSize` values to 970x600 and resolve generation dimensions at the largest supported 97:60 resolution. Do not ask the image runtime to generate 970x300. Keep the main subject and essential copy inside a centered safe region equivalent to 970x300 at the upload scale when later banner cropping may be required. For `mobile`, set every module's `uploadSize` to 600x450 and `generationSize` to 2352x1776.
+For `standard`, set both `uploadSize` and `generationSize` of the first module to 970x600. For `standard-large`, set all five working-canvas `uploadSize` values to 970x600 and resolve generation dimensions at the largest supported 97:60 resolution. Do not ask the image runtime to generate 970x300. `A+L01` must still be planned as a Header Banner: use a wide, low-height visual rhythm, reserve a centered safe region equivalent to 970x300 for the essential product and copy, and do not reuse the centered information-card composition of `A+L02`–`A+L05`. For `mobile`, set every module's `uploadSize` to 600x450 and `generationSize` to 2352x1776.
 
 For `advanced`, return exactly six modules in the order `A+X01` through `A+X06`. Preserve the 1464:600 ratio for the first four and 4:3 for the last two. The 800x600 size is a 4:3 reference/upload target from the proposed planning set, not a universal Amazon module guarantee; keep the account-specific upload requirement visible as a verification warning. Use the largest generation canvas supported by the runtime while preserving each ratio, with 2928x1200 and 2400x1800 as preferred concrete targets. Treat hotspot and video-cover roles as visual fallbacks unless the destination editor explicitly supports the corresponding interactive or video feature.
 
 For Mobile A+, use one clear message per module, large product evidence, short mobile-readable copy, and no dense multi-column composition. A+ should add product/brand value rather than simply duplicating the Listing gallery.
+
+### A+ module differentiation contract
+
+Treat the A+ set as one product story with deliberate variation, not as several versions of the same product shot. Consistency comes from the selected visual system and factual product identity; variation comes from the module role and composition.
+
+For every A+ module, assign and make explicit in `planMarkdown`:
+
+- `叙事角色`: the module's one primary job in the story.
+- `主证据`: the supported product fact, feature, material, use scenario, included item, or brand fact being shown.
+- `构图族`: for example banner-safe hero, full-bleed lifestyle, three-quarter product with detail crop, macro construction detail, step sequence, bundle layout, or restrained comparison area.
+- `与其他模块的差异`: state what changes from the neighboring modules, including camera distance, product angle, product placement, scene, and copy zone.
+
+Do not repeat the same combination of hero framing, camera distance, product angle, background treatment, copy placement, and message across two modules. Use only facts supported by the listing and references; when a role is unsupported, choose another supported role instead of inventing evidence.
+
+For the default `standard-large` sequence, use this role map unless the product facts require a better-supported alternative:
+
+```text
+A+L01 — Brand / hero banner: establish the product and one core value in a wide, banner-safe composition; do not use the same centered product card used by later modules.
+A+L02 — Core benefit evidence: explain one important feature with a purposeful detail crop, callout, or structured information area.
+A+L03 — Use scenario: show the product working in a believable context or demonstrate a supported use flow; vary the camera distance and product placement.
+A+L04 — Construction / material / ergonomics: show a different supported physical detail, finish, mechanism, or interaction using close-up or sectional composition when evidence exists.
+A+L05 — Secondary value: choose a supported bundle, steps, care/use guidance, secondary scenario, or brand-value composition that has not already been used.
+```
+
+For `standard`, keep the header distinct from the three single-image modules, and make each `Highlight Tile` represent a different short benefit. For `premium`, keep the hero, feature images, and vertical brand-story modules visibly different in framing and purpose. For Mobile A+, keep one message per module but vary the evidence type and framing; never reuse one desktop composition by cropping it five times.
 
 If no real brand or logo is supplied, never invent a brand name, logo artwork, brand history, authorization claim, website, contact detail, or external link. Comparison modules may compare only supported same-brand products.
 
@@ -121,9 +146,9 @@ When converting a plan into a local Codex generation prompt, preserve this order
 1. The slot/module task prompt: subject, product evidence, composition, layout, visible copy, and target dimensions.
 2. `Selected visual style (highest priority)`: selected preset/reference name, description, palette anchors, typography feel, lighting, background language, material finish, and information-panel styling.
 3. `Series style guide (lower priority than the selected visual style)`: factual continuity only.
-4. `Layout density`: default to `minimal`, which uses fewer callouts, generous spacing, and restrained copy. Use `rich` only when the user explicitly requests content-rich information; it may use organized callouts, detail crops, measurement arrows, comparison areas, or use-case zones when supported by the facts.
+4. `Layout density`: for A+ large-image modules in `standard`, `standard-large`, `premium`, and `advanced`, default to `rich`, which may use organized callouts, detail crops, measurement arrows, comparison areas, or use-case zones when supported by the facts. Use `minimal` for Mobile A+ and `220x220` highlight tiles unless the user explicitly requests denser content. For Listing images, default to `minimal`. A user preference overrides these defaults; density must not erase the module's assigned story role.
 5. `Negative prompt`: English, specific to the slot and shared style guard.
-6. `Style reference rule`: the last input image is the same style board shown to the user as the template preview; use it only for palette, lighting, contrast, material finish, typography feel, and polish. Do not copy its placeholder words, fixed layout, swatch positions, exact composition, product arrangement, product count, props, scene, or information density.
+6. `Style reference rule`: the last input image is the same style board shown to the user as the template preview; use it only for palette, lighting, contrast, material finish, typography feel, and polish. Do not copy its placeholder words, fixed layout, swatch positions, exact composition, product arrangement, product count, props, scene, information density, page grid, margins, or copy zones. Do not repeat the board's composition across A+ modules; the module task prompt controls the actual composition.
 
 The selected visual style outranks conflicting aesthetic language in the slot prompt or series guide, while product facts and required visible copy remain authoritative.
 
